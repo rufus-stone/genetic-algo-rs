@@ -53,21 +53,32 @@ mod tests {
     use rand_chacha::ChaCha8Rng;
 
     #[test]
-    fn crossover() {
+    fn uniform_crossover() {
+        // Seed a ChaCha8Rng for a predictable "random" number to use for testing
         let mut prng = ChaCha8Rng::from_seed(Default::default());
+
+        // Create two parent Chromosomes with 100 genes each
         let parent_a: Chromosome = (1..=100).map(|n| n as f32).collect();
         let parent_b: Chromosome = (1..=100).map(|n| -n as f32).collect();
 
+        // Produce a child Chromosome using the UniformCrossover method
         let child = UniformCrossover::new().crossover(&mut prng, &parent_a, &parent_b);
 
-        // Number of genes different between `child` and `parent_a`
-        let diff_a = child.iter().zip(parent_a).filter(|(c, p)| *c != p).count();
+        // Calculate the number of genes that differ between child and parent_a
+        let diff_a = child
+            .iter()
+            .zip(parent_a)
+            .filter(|(child_gene, parent_gene)| *child_gene != parent_gene)
+            .count();
 
-        // Number of genes different between `child` and `parent_b`
-        let diff_b = child.iter().zip(parent_b).filter(|(c, p)| *c != p).count();
+        // Calculate the number of genes that differ between child and parent_b
+        let diff_b = child
+            .iter()
+            .zip(parent_b)
+            .filter(|(child_gene, parent_gene)| *child_gene != parent_gene)
+            .count();
 
-        // Roughly looks like 50%, which proves that chance for picking either
-        // gene *is* 50%
+        // Roughly looks like 50%, which proves that chance for picking either gene *is* 50%
         assert_eq!(diff_a, 49);
         assert_eq!(diff_b, 51);
     }

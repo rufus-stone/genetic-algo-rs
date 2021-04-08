@@ -51,7 +51,8 @@ mod tests {
 
     #[test]
     fn random_layer_creation() {
-        let mut prng = ChaCha8Rng::from_seed(Default::default()); // This gives us a predictable "random" number to use for testing
+        // Seed a ChaCha8Rng for a predictable "random" number to use for testing
+        let mut prng = ChaCha8Rng::from_seed(Default::default());
 
         // Roll a new random Layer with 3 input Neurons and 2 output Neurons
         let layer = Layer::random(&mut prng, 3, 2);

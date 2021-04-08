@@ -70,7 +70,8 @@ mod tests {
 
     #[test]
     fn random_neuron_creation() {
-        let mut prng = ChaCha8Rng::from_seed(Default::default()); // This gives us a predictable "random" number to use for testing
+        // Seed a ChaCha8Rng for a predictable "random" number to use for testing
+        let mut prng = ChaCha8Rng::from_seed(Default::default());
 
         // Roll a new random Neuron with 4 outputs
         let neuron = Neuron::random(&mut prng, 4);

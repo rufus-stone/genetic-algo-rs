@@ -9,6 +9,7 @@ pub mod crossover;
 mod individual;
 pub mod mutation;
 pub mod selection;
+mod statistics;
 
 #[derive(Clone, Debug)]
 pub struct GeneticAlgorithm<S, C, G> {
@@ -71,6 +72,7 @@ mod tests {
 
     #[test]
     fn evolution() {
+        // Seed a ChaCha8Rng for a predictable "random" number to use for testing
         let mut prng = ChaCha8Rng::seed_from_u64(42);
         //let mut prng = ChaCha8Rng::from_seed(Default::default());
 

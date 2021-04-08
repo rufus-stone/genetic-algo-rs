@@ -30,9 +30,15 @@ let mut prng = ChaCha8Rng::seed_from_u64(42);
 - The `approx` crate is handy for comparing floating point numbers, e.g.:
 ```rust
 
-let f1 = 100.0 / 3.0; // This might produce 33.333333333333336
+let f1 = 100.0 / 3.0; // Float precision errors mean this might produce something like 33.333333333333336, so a direct assert_eq!() might fail
 let f2 = 33.3333333333333;
 approx::assert_relative_eq!(f1, f2);
-```
 
-- asfd
+// BUT you can't directly use it to compare, e.g. two Vec<f32>, instead it expects a slice, e.g.:
+let vf1 = vec![1.0, 2.0];
+let vf2 = vec![1.0, 2.0];
+//approx::assert_relative_eq!(vf1, vf2); // ERROR: Won't compile!
+approx::assert_relative_eq!(vf1.as_slice(), vf2.as_slice()); // This works though!
+
+// This is different to the normal assert_eq!() macro which WILL let you directly compare those two vectors (and it works on the slices too)
+```

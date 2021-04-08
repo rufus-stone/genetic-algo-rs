@@ -17,6 +17,10 @@ impl Chromosome {
     pub fn iter_mut(&mut self) -> impl Iterator<Item = &mut f32> {
         self.genes.iter_mut()
     }
+
+    pub fn as_slice(&self) -> &[f32] {
+        self.genes.as_slice()
+    }
 }
 
 // The Index trait allows indexing into a custom type using the [i] syntax

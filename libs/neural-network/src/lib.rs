@@ -49,7 +49,8 @@ mod tests {
 
     #[test]
     fn random_network_creation() {
-        let mut prng = ChaCha8Rng::from_seed(Default::default()); // This gives us a predictable "random" number to use for testing
+        // Seed a ChaCha8Rng for a predictable "random" number to use for testing
+        let mut prng = ChaCha8Rng::from_seed(Default::default());
 
         let layer1 = LayerTopology { neurons: 3 };
         let layer2 = LayerTopology { neurons: 2 };

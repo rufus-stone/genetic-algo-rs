@@ -38,3 +38,68 @@ impl MutationMethod for GaussianMutation {
 pub trait MutationMethod {
     fn mutate(&self, prng: &mut dyn RngCore, child: &mut Chromosome);
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use rand::SeedableRng;
+    use rand_chacha::ChaCha8Rng;
+
+    #[test]
+    fn gaussian_mutation() {
+        // Seed a ChaCha8Rng for a predictable "random" number to use for testing
+        let mut prng = ChaCha8Rng::from_seed(Default::default());
+
+        // ------------------------------------------------------------------------------------------
+        // Create a mutator with a 50% chance of mutating each gene by 0 (i.e. nothing ever happens!)
+        let mutator = GaussianMutation::new(0.5, 0.0);
+
+        // Create a fake child to mutate
+        let mut child: Chromosome = vec![1.0, 2.0, 3.0, 4.0, 5.0].into_iter().collect();
+
+        // Given the default random seed and the given mutation settings, mutating the child should produce the following Chromosome (i.e. nothing will change)
+        let expected: Chromosome = vec![1.0, 2.0, 3.0, 4.0, 5.0].into_iter().collect();
+
+        // Mutate the child
+        mutator.mutate(&mut prng, &mut child);
+
+        // Check the actual mutation matches the expected mutation
+        approx::assert_relative_eq!(child.as_slice(), expected.as_slice());
+
+        // ---------------------------------------------------------------------------
+        // Create a mutator with a 75% chance of mutating each gene by at most +/- 2.0
+        let mutator = GaussianMutation::new(0.75, 2.0);
+
+        // Create a fake child to mutate
+        let mut child: Chromosome = vec![1.0, 2.0, 3.0, 4.0, 5.0].into_iter().collect();
+
+        // Given the default random seed and the given mutation settings, mutating the child should produce the following Chromosome
+        let expected: Chromosome = vec![0.32473612, 2.0, 4.998356, 5.6518774, 5.3180294]
+            .into_iter()
+            .collect();
+
+        // Mutate the child
+        mutator.mutate(&mut prng, &mut child);
+
+        // Check the actual mutation matches the expected mutation
+        approx::assert_relative_eq!(child.as_slice(), expected.as_slice());
+
+        // ---------------------------------------------------------------------------
+        // Create a mutator with a 100% chance of mutating each gene by at most +/- 0.25
+        let mutator = GaussianMutation::new(1.0, 0.25);
+
+        // Create a fake child to mutate
+        let mut child: Chromosome = vec![1.0, 2.0, 3.0, 4.0, 5.0].into_iter().collect();
+
+        // Given the default random seed and the given mutation settings, mutating the child should produce the following Chromosome
+        let expected: Chromosome = vec![1.2004075, 2.0767758, 3.003996, 4.0161314, 4.8749585]
+            .into_iter()
+            .collect();
+
+        // Mutate the child
+        mutator.mutate(&mut prng, &mut child);
+
+        // Check the actual mutation matches the expected mutation
+        approx::assert_relative_eq!(child.as_slice(), expected.as_slice());
+    }
+}
