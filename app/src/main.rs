@@ -12,7 +12,9 @@ fn main() {
     let layer2 = LayerTopology { neurons: 2 };
     let layer3 = LayerTopology { neurons: 1 };
 
-    let ntwk = Network::random(&[layer1, layer2, layer3]);
+    let mut prng = rand::thread_rng();
+
+    let ntwk = Network::random(&mut prng, &[layer1, layer2, layer3]);
     log::info!("{:?}", ntwk);
 
     let r = ntwk.propagate((&[1.0, 2.1, 3.3]).to_vec());
